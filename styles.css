@@ -1,0 +1,13 @@
+/* Put any needed css here */
+.navbar-center
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 20;
+    text-align: center;
+}
+
+.navbar-huge{
+    font-size: large;
+}

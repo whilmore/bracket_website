@@ -1,0 +1,110 @@
+<!--put an html template for your balanced braces directive here-->
+<!DOCTYPE html>
+<html lang="en" >
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+		<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+		<script src="app.js"></script>
+		<link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="styles.css" rel="stylesheet">
+
+        <script>
+            angular.module('myApp', [])
+            .controller('validCtrl', ['$scope', function($scope) {
+            
+            $scope.div_len = ".col-xs-6 .col-md-4"
+            $scope.pairs = {
+                    ")": "(",
+                    "]": "[",
+                    "}": "{"
+                };
+
+            $scope.validator = function(str_in) {
+                const chk_stack = [];
+                for (const i of str_in) {
+                    if (Object.values($scope.pairs).includes(i)) {
+                        chk_stack.push(i);
+                    }
+                    else if (i in $scope.pairs) {
+                        if ((chk_stack.length == 0) || ($scope.pairs[i] != chk_stack.pop())) {
+                            $scope.result = "false";
+                            return;
+                        }
+                    }
+                }
+                $scope.result = String(chk_stack.length == 0);
+                return;
+              };
+            
+            $scope.addPair = function(key_in, val_in){
+                if (!(key_in in $scope.pairs) && key_in != undefined && val_in != undefined){
+                    $scope.pairs[key_in] = val_in;
+                }
+            };
+            
+            $scope.removePair = function(key_in){
+                if (key_in in $scope.pairs){
+                    $scope.result = key_in;
+                    delete $scope.pairs[key_in];
+                }
+            };
+
+            }]);
+        </script>
+    </head>
+
+    <body ng-app="myApp" ng-controller="validCtrl">
+        <nav class="navbar navbar-static-top navbar navbar-dark bg-primary">
+            <div class="container">
+                <span class="navbar-text navbar-center navbar-huge">
+                    Balanced Brackets Website
+                </span>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class=" col-sm-6 ml-auto">
+                    <form>
+                        <input type="text" ng-model="usr_in" required></input>
+                        <button ng-click="validator(usr_in);" type="submit">hello</button>
+                    </form>
+                    <div id="Output">{{usr_in}} is properly balanaced: {{result}}</div>
+                    <p>{{usr_in}}</p>
+                    <p></p>
+                </div>
+                <div class=" col-sm-6 ml-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Opening Bracket</th>
+                                <th scope="col">Closing Bracket</th>
+                                <th scope="col">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td>
+                                <input type="text" ng-model="pair_val" pattern=".{1}" required></input>
+                            </td>
+                            <td>
+                                <input type="text" ng-model="pair_key" pattern=".{1}" required></input>
+                            </td>
+                            <td>
+                                <button ng-click="addPair(pair_key, pair_val);" type="submit">Add Pair</button>
+                            </td>
+                            <tr ng-repeat="(key,value) in pairs")>
+                                <td>{{value}}</td>
+                                <td>{{key}}</td>
+                                <td>
+                                    <button class="button" ng-click="removePair(key)" type="submit">Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>
